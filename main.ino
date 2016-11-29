@@ -185,7 +185,8 @@ void shouldChangeSpeed () {
   }
 
   if (direction == 1 &&
-      diffOrZero(totalTimeLowSpeed, position) < LOW_SPEED_TIME_END) {
+      (position > totalTimeLowSpeed ||
+       totalTimeLowSpeed - position < LOW_SPEED_TIME_END)) {
     if (highSpeed) {
       motorLowSpeed();
     }
@@ -235,7 +236,12 @@ void shouldStop () {
 }
 
 void stopDueToHighLoad () {
-  // TODO: reverse();
+  if (direction == -1 &&
+      (highSpeed || position < LOW_SPEED_TIME_END)) {
+    // run back up a bit
+    motorUp();
+    delay(1000);
+  }
   motorStop();
   Serial.print("HIGH LOAD: ");
   Serial.println(load);
@@ -256,11 +262,4 @@ void updatePosition () {
   position += multiplier * diff;
 
   lastPosTime = millis();
-}
-
-unsigned long diffOrZero (unsigned long a, long b) {
-  if (b > a) {
-    return 0;
-  }
-  return a - b;
 }

@@ -21,25 +21,6 @@ void motorDown () {
   Serial.println("DOWN");
 }
 
-// reverse motor direction
-void reverse () {
-  if (direction == -1) {
-    // was down, run back up
-    digitalWrite(DOWN_PIN, LOW);
-    digitalWrite(UP_PIN, HIGH);
-  } else if (direction == 1) {
-    // was up, run back down
-    digitalWrite(UP_PIN, LOW);
-    digitalWrite(DOWN_PIN, HIGH);
-  }
-
-  running = true;
-  // TODO: direction = ?
-  // TODO: delay(500);
-  motorShouldStart = false;
-  Serial.println("REVERSE");
-}
-
 void motorHighSpeed () {
   digitalWrite(HIGH_SPEED_PIN, HIGH);
   highSpeed = true;
