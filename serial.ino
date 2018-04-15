@@ -20,6 +20,9 @@ void actOnSerial () {
       case 't':
         toggleStats();
         break;
+      case 'f':
+        toggleStatsFast();
+        break;
     }
   }
 }
@@ -32,6 +35,7 @@ void help () {
   Serial.println("s : Stop the garage door.");
   Serial.println("c : Calibration.");
   Serial.println("t : Toggle stats.");
+  Serial.println("f : Toggle fast stats.");
 }
 
 void stats () {
@@ -64,6 +68,26 @@ void stats () {
   Serial.println(position);
 }
 
+void statsFast () {
+  // print stats every 100 ms
+  if (showStatsFast == false || abs(millis() - prevStatsTime) < 100) {
+    return;
+  }
+
+  prevStatsTime = millis();
+
+  Serial.println("top  \tbottom\tload");
+  Serial.print(top);
+  Serial.print("\t");
+  Serial.print(bottom);
+  Serial.print("\t");
+  Serial.println(load);
+}
+
 void toggleStats () {
   showStats = !showStats;
+}
+
+void toggleStatsFast () {
+  showStatsFast = !showStatsFast;
 }

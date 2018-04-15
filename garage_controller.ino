@@ -1,8 +1,8 @@
 #define LOAD_MEASUREMENTS 10
-#define HIGH_LOAD 350
-#define HIGH_LOAD_START 900
-#define HIGH_LOAD_EXTREME 2000
-#define START_TIME 600
+#define HIGH_LOAD 400
+#define HIGH_LOAD_START 700
+#define HIGH_LOAD_EXTREME 850
+#define START_TIME 300
 #define LOW_SPEED_TIME 2000
 #define LOW_SPEED_TIME_END 4000
 #define DEBOUNCE_READS 10
@@ -33,7 +33,7 @@ bool motorShouldStop = false;
 // inputs
 bool top = false;
 bool bottom = false;
-bool wireless = false;
+bool wireless = true;
 bool button = false;
 bool tempInput = false;
 int buttonReadsEqual = 0;
@@ -111,6 +111,7 @@ unsigned long timeSince (unsigned long timestamp) {
 // stats
 unsigned long prevStatsTime = 0;
 bool showStats = false;
+bool showStatsFast = false;
 
 // calibration
 unsigned long totalTimeLowSpeed;
@@ -146,6 +147,7 @@ void loop () {
 
   delay(1);
   stats();
+  statsFast();
   actOnSerial();
 }
 
@@ -242,11 +244,11 @@ void shouldStop () {
 }
 
 void stopDueToHighLoad () {
-  if (direction == -1 &&
-      (highSpeed || position < LOW_SPEED_TIME_END)) {
+  if (direction == -1 && highSpeed) {
     // run back up a bit
     motorUp();
     delay(1000);
+    direction = -1;
   }
   motorStop();
   Serial.print("HIGH LOAD: ");
