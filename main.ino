@@ -1,6 +1,7 @@
 #define LOAD_MEASUREMENTS 10
 #define HIGH_LOAD 350
 #define HIGH_LOAD_START 900
+#define HIGH_LOAD_EXTREME 2000
 #define START_TIME 600
 #define LOW_SPEED_TIME 2000
 #define LOW_SPEED_TIME_END 4000
@@ -204,6 +205,11 @@ void shouldStop () {
   if (!running) {
     return;
   }
+  if (load > HIGH_LOAD_EXTREME) {
+    stopDueToHighLoad();
+    Serial.println("HIGH LOAD EXTREME");
+    return;
+  }
   if (motorShouldStop) {
     motorStop();
     return;
@@ -219,17 +225,17 @@ void shouldStop () {
 
   unsigned long runningTime = timeSince(motorStart);
   unsigned long highSpeedTime = timeSince(motorHighSpeedStart);
-  if (runningTime < START_TIME && load > HIGH_LOAD_START) {
+  if (!highSpeed && load > HIGH_LOAD_START && !button) {
     stopDueToHighLoad();
-    Serial.println("HIGH LOAD START");
+    Serial.println("HIGH LOAD SLOW");
     return;
   }
-  if (highSpeedTime < START_TIME && load > HIGH_LOAD_START) {
+  if (highSpeed && highSpeedTime < START_TIME && load > HIGH_LOAD_START && !button) {
     stopDueToHighLoad();
-    Serial.println("HIGH LOAD START");
+    Serial.println("HIGH LOAD HIGH SPEED START");
     return;
   }
-  if (runningTime >= START_TIME && highSpeedTime > START_TIME && load > HIGH_LOAD) {
+  if (runningTime >= LOW_SPEED_TIME && highSpeedTime > START_TIME && load > HIGH_LOAD && !button) {
     stopDueToHighLoad();
     return;
   }

@@ -36,9 +36,12 @@ void motorLowSpeed () {
 }
 
 void motorStop () {
+  digitalWrite(HIGH_SPEED_PIN, LOW);
+  if (!top && !bottom) {
+    delay(100);
+  }
   digitalWrite(UP_PIN, LOW);
   digitalWrite(DOWN_PIN, LOW);
-  digitalWrite(HIGH_SPEED_PIN, LOW);
 
   running = false;
   motorShouldStop = false;
